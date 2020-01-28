@@ -12,6 +12,7 @@
     "test:watch": "jest --watchAll"
   },
   "devDependencies": {
+    "@types/express": "^4.17.2",
     "@types/jest": "^25.1.0",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.0",
