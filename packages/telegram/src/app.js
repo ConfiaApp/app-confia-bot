@@ -1,39 +1,28 @@
 import bodyParser from "body-parser";
 import express from "express";
 import Telegraf from "telegraf";
-import config from "./config";
 import routes from "./routes";
 
-export function app() {
+export async function app(config) {
   const server = express();
+  const bot = new Telegraf(config.bot.token);
+
+  /**
+   * Telegram
+   */
+  bot.start(ctx => ctx.reply("Bem vindo ao Confia bot!"));
   /**
    * Middlewares
    */
   server.use(bodyParser.json());
+  server.use(async (req, res, next) => {
+    req.telegraf = bot;
+    next();
+  });
   /**
    * Routes
    */
+  await bot.launch();
   server.use(routes);
   return server;
-}
-
-export async function bot() {
-  const telegraf = new Telegraf(config.bot.token);
-
-  /**
-   * Default commands
-   */
-  telegraf.start(ctx => ctx.reply("Bem vindo ao Confia bot!"));
-  /**
-   * Team commands
-   */
-  telegraf.command("/ale", ctx => ctx.reply("😄"));
-
-  /**
-   * Handlers
-   */
-  // TODO: find to specif user -> In query and @username
-  // TODO: Send message
-
-  return telegraf.launch();
 }

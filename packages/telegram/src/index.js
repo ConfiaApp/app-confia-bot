@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import { app, bot } from "./app";
+import { app } from "./app";
 import config from "./config";
 
-const server = app();
+const server = app(config);
 
-server.listen(config.server.port);
-bot().catch(e => console.error(e));
+server.then(s => s.listen(config.server.port));
