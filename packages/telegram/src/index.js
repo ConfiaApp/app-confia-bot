@@ -2,6 +2,8 @@
 import { app } from "./app";
 import config from "./config";
 
-const server = app(config);
-
-server.then(s => s.listen(config.server.port));
+app({ config }).then(([server, bot]) => {
+    server.listen(config.server.port);
+    console.log("hello");
+    bot.then(console.log).catch(console.error)
+}).catch(console.error);

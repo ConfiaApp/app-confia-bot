@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import * as Yup from 'yup';
 const routes = new Router();
 
 /**
@@ -14,19 +14,30 @@ routes.get("/health", (request, response) => {
  * Messages
  */
 
-routes.post("/messages", (request, response) => {
-  try {
-    const { telegraf, body } = request;
-    const { message } = body;
-
-    if (!message || typeof message !== "string") {
-      return response.status(400).json({ message: "You must send a message" });
+routes.post("/messages", 
+    async (request, response, next) => {
+        try {
+            const schema = Yup.object().shape({
+                message: Yup.string().required(),
+                channel: Yup.string().required()
+            });
+            const { message, channel } = request.body;
+            await schema.validate({message, channel});
+            next();
+        } catch (error) {
+            return response.status(400).json({error})
+        }
+    },
+    async (request, response) => {
+        try {
+            const { bot, body } = request;
+            const { message, channel } = body;
+            await bot.telegram.sendMessage(channel, message);
+            return response.json({ ok: true });
+        } catch (error) {
+            return response.status(400).json({ error });
+        }
     }
-
-    return response.json({ ok: true });
-  } catch (error) {
-    return response.status(500).json({ error });
-  }
-});
+);
 
 export default routes;

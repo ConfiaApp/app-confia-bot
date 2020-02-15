@@ -3,26 +3,31 @@ import express from "express";
 import Telegraf from "telegraf";
 import routes from "./routes";
 
-export async function app(config) {
+export async function app({ config }) {
   const server = express();
-  const bot = new Telegraf(config.bot.token);
+  const bot = new Telegraf(config.bot.token, {
+      telegram: {
+          webhookReply: false
+      }
+  });
 
   /**
    * Telegram
    */
   bot.start(ctx => ctx.reply("Bem vindo ao Confia bot!"));
+  bot.on("message", ctx => ctx.reply("Hello"))
   /**
    * Middlewares
    */
   server.use(bodyParser.json());
-  server.use(async (req, res, next) => {
-    req.telegraf = bot;
+  server.use((req, res, next) => {
+    req.bot = bot;
     next();
   });
   /**
    * Routes
    */
-  await bot.launch();
+  
   server.use(routes);
-  return server;
+  return [server, bot.launch()];
 }

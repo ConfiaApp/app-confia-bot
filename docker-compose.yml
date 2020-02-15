@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  telegram:
+    build: ./packages/telegram
+    environment: 
+      - NODE_ENV=${NODE_ENV}
+      - BOT_TOKEN=${BOT_TOKEN_TELEGRAM}
+      - PORT=${PORT_TELEGRAM}
+    ports:
+      - "${PORT_TELEGRAM}:${PORT_TELEGRAM}"
+    networks: 
+      - bot-network
+networks: 
+  bot-network:
+    
