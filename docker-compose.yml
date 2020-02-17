@@ -2,10 +2,13 @@ version: '3.7'
 services:
   telegram:
     build: ./packages/telegram
+    command: yarn start:dev
     environment: 
       - NODE_ENV=${NODE_ENV}
       - BOT_TOKEN=${BOT_TOKEN_TELEGRAM}
       - PORT=${PORT_TELEGRAM}
+    volumes: 
+      - ./packages/telegram:/usr/app
     ports:
       - "${PORT_TELEGRAM}:${PORT_TELEGRAM}"
     networks: 

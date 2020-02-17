@@ -15,7 +15,7 @@ export async function app({ config }) {
    * Telegram
    */
   bot.start(ctx => ctx.reply("Bem vindo ao Confia bot!"));
-  bot.on("message", ctx => ctx.reply("Hello"))
+  bot.on("message", ctx => ctx.reply("Beer?"));
   /**
    * Middlewares
    */
